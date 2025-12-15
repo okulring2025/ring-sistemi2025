@@ -20,6 +20,7 @@
             margin-bottom: 1rem;
             text-align: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 0.875rem;
         }
         .status-online { color: #059669; font-weight: 600; }
         .status-offline { color: #DC2626; font-weight: 600; }
@@ -134,7 +135,7 @@
             color: #6B7280;
             cursor: not-allowed;
         }
-        .cooldown-message {
+        .already-voted {
             margin-top: 1rem;
             padding: 1rem;
             background: #FEF3C7;
@@ -144,7 +145,7 @@
             color: #92400E;
             display: none;
         }
-        .cooldown-message.show { display: block; }
+        .already-voted.show { display: block; }
         .complete-message {
             margin-top: 1rem;
             padding: 1rem;
@@ -152,9 +153,8 @@
             border: 2px solid #34D399;
             border-radius: 0.5rem;
             display: none;
-            animation: pulse 2s infinite;
         }
-        .complete-message.show { display: block; }
+        .complete-message.show { display: block; animation: pulse 2s infinite; }
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.8; }
@@ -262,7 +262,7 @@
         </div>
 
         <div class="header">
-            <button class="settings-btn" onclick="openSettings()">⚙️ Ayarlar</button>
+            <button class="settings-btn" onclick="openSettings()">⚙️</button>
             <div class="bell-icon">🔔</div>
             <h1 class="title">Ring Çağırma Sistemi</h1>
             <p class="subtitle">Durak: <span id="stopName">MÜHENDİSLİK FAKÜLTESİ</span></p>
@@ -275,7 +275,7 @@
                     <span class="count-target">/ 30</span>
                 </div>
                 <p style="color: #6B7280; margin-top: 0.5rem;">kişi ring çağırdı</p>
-                <p style="color: #9CA3AF; font-size: 0.75rem; margin-top: 0.25rem;">🌐 Tüm okul aynı sayacı görüyor</p>
+                <p style="color: #9CA3AF; font-size: 0.75rem; margin-top: 0.25rem;">🔄 Gerçek zamanlı</p>
             </div>
 
             <div class="progress-bar-container">
@@ -291,23 +291,24 @@
                 🔔 RING ÇAĞIR
             </button>
 
-            <div class="cooldown-message" id="cooldownMessage">
-                Tekrar çağırabilmek için: <strong id="cooldownTime">--:--</strong>
+            <div class="already-voted" id="alreadyVoted">
+                ✋ Siz zaten ring çağırdınız!<br>
+                <small>Her kişi sadece 1 kez basabilir.</small>
             </div>
 
             <div class="complete-message" id="completeMessage">
-                <p style="font-weight: bold; color: #065F46; margin-bottom: 0.25rem;">🎉 Hedef Tamamlandı!</p>
-                <p style="font-size: 0.875rem; color: #047857;">Şoför bilgilendirildi! Sayaç sıfırlanıyor...</p>
+                <p style="font-weight: bold; color: #065F46; margin-bottom: 0.25rem;">🎉 30 Kişiye Ulaşıldı!</p>
+                <p style="font-size: 0.875rem; color: #047857;">Şoför bilgilendirildi!</p>
             </div>
         </div>
 
         <div class="info-section">
             <p class="info-title">✅ Nasıl Çalışır?</p>
             <ul class="info-list">
-                <li>TÜM OKUL aynı sayacı görür</li>
-                <li>30 kişi butona basınca şoföre Telegram mesajı gider</li>
-                <li>Her kişi 30 dakikada bir basabilir</li>
-                <li>30 kişi sonrası sayaç otomatik sıfırlanır</li>
+                <li>Herkes gerçek zamanlı aynı sayacı görür</li>
+                <li>Her kişi sadece 1 kez basabilir</li>
+                <li>30 kişiye ulaşınca şoföre mesaj gider</li>
+                <li>Sayaç otomatik sıfırlanır</li>
             </ul>
         </div>
     </div>
@@ -323,8 +324,8 @@
 
             <div class="form-group">
                 <label class="form-label">Telegram Bot Token</label>
-                <input type="text" class="form-input" id="botToken" placeholder="1234567890:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw">
-                <div class="form-hint">@BotFather'dan aldığınız token</div>
+                <input type="text" class="form-input" id="botToken" placeholder="1234567890:AAH...">
+                <div class="form-hint">@BotFather'dan alın</div>
             </div>
 
             <div class="form-group">
@@ -336,13 +337,13 @@
             <div class="info-box">
                 <p style="font-weight: 600; margin-bottom: 0.5rem;">📱 Telegram Kurulum:</p>
                 <ol style="padding-left: 1.2rem; margin: 0; font-size: 0.7rem;">
-                    <li><strong>@BotFather</strong> → /newbot → Token al</li>
-                    <li><strong>@userinfobot</strong> → START → Chat ID al</li>
+                    <li>@BotFather → /newbot → Token al</li>
+                    <li>@userinfobot → START → Chat ID al</li>
                 </ol>
             </div>
 
             <button class="btn btn-primary" onclick="sendTestMessage()" style="width: 100%; margin-bottom: 0.5rem;">
-                🧪 Test Mesajı Gönder
+                🧪 Test Mesajı
             </button>
 
             <div class="button-group">
@@ -351,7 +352,7 @@
             </div>
 
             <button class="reset-btn" onclick="resetSystem()">
-                🔄 Sayacı Sıfırla (Yönetici)
+                🔄 Sistemi Sıfırla (Şifre: admin123)
             </button>
         </div>
     </div>
@@ -360,242 +361,204 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // ⚠️⚠️⚠️ BURAYA FİREBASE BİLGİLERİNİZİ YAPIŞTIRIN ⚠️⚠️⚠️
+        // ⚠️⚠️⚠️ ÖNEMLİ: BURAYA FİREBASE BİLGİLERİNİZİ YAPIŞTIRIN ⚠️⚠️⚠️
         const firebaseConfig = {
-            apiKey: "AIzaSyCrYCPaz92541MPC133tEvdqqO_joz2kYM",
-            authDomain:"ring-sistemiii.firebaseapp.com", 
-            databaseURL: "https://ring-sistemiii-default-rtdb.firebaseio.com",
-            projectId:"ring-sistemiii",
-            storageBucket:  "ring-sistemiii.firebasestorage.app",
-            messagingSenderId:"1067000483008",
-            appId:"1:1067000483008:web:09e15e6150f73894b1b125"
+            apiKey: "AIzaSyB4GbZstvDVOlq4JhmdObPS66E77y0Eb2w",
+            authDomain: "ring-sistemi-yenii.firebaseapp.com",
+            databaseURL:https://ring-sistemi-yenii-default-rtdb.firebaseio.com",
+            projectId: "ring-sistemi-yenii",
+            storageBucket:  "ring-sistemi-yenii.firebasestorage.app",
+            messagingSenderId: "809715979580",
+            appId:"1:809715979580:web:5a9410f662f2ef51cd7a39"
+ 
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const countRef = database.ref('ringCount');
-        
-        const TARGET_COUNT = 30;
-        const COOLDOWN_MS = 30 * 60 * 1000;
-        let cooldownInterval = null;
-
-        window.onload = function() {
-            loadSettings();
-            checkCooldown();
-            listenToCount();
-        };
-
-        function listenToCount() {
-            countRef.on('value', (snapshot) => {
-                const count = snapshot.val() || 0;
-                updateUI(count);
-                document.getElementById('statusText').textContent = '🟢 Bağlı (Firebase)';
-                document.getElementById('statusText').className = 'status-online';
-            }, (error) => {
-                console.error('Firebase hatası:', error);
-                document.getElementById('statusText').textContent = '🔴 Firebase Bağlantı Hatası';
-                document.getElementById('statusText').className = 'status-offline';
-            });
-        }
-
-        function updateUI(count) {
-            document.getElementById('count').textContent = count;
-            const progress = Math.min((count / TARGET_COUNT) * 100, 100);
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressText').textContent = '%' + Math.round(progress) + ' tamamlandı';
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            const countRef = database.ref('ringCount');
+            const votersRef = database.ref('voters');
             
-            if (count >= TARGET_COUNT) {
-                document.getElementById('completeMessage').classList.add('show');
-            } else {
-                document.getElementById('completeMessage').classList.remove('show');
+            const TARGET_COUNT = 30;
+            let myDeviceId = localStorage.getItem('deviceId');
+            if (!myDeviceId) {
+                myDeviceId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId', myDeviceId);
             }
-        }
 
-        function callRing() {
-            const lastCall = localStorage.getItem('myLastCall');
-            const now = Date.now();
-            
-            if (lastCall && (now - parseInt(lastCall)) < COOLDOWN_MS) {
-                const remaining = COOLDOWN_MS - (now - parseInt(lastCall));
-                const mins = Math.floor(remaining / 60000);
-                alert(`⏳ Henüz bekleme süreniz bitmedi!\n\nKalan süre: ${mins} dakika`);
-                return;
+            window.onload = function() {
+                loadSettings();
+                listenToCount();
+                checkIfVoted();
+            };
+
+            function listenToCount() {
+                countRef.on('value', (snapshot) => {
+                    const count = snapshot.val() || 0;
+                    updateUI(count);
+                    document.getElementById('statusText').textContent = '🟢 Bağlı (Firebase)';
+                    document.getElementById('statusText').className = 'status-online';
+                }, (error) => {
+                    console.error('Firebase hatası:', error);
+                    document.getElementById('statusText').textContent = '🔴 Bağlantı Hatası: ' + error.message;
+                    document.getElementById('statusText').className = 'status-offline';
+                });
             }
-            
-            countRef.transaction((currentCount) => {
-                let count = currentCount || 0;
+
+            function checkIfVoted() {
+                votersRef.child(myDeviceId).once('value', (snapshot) => {
+                    if (snapshot.exists()) {
+                        document.getElementById('ringBtn').classList.remove('active');
+                        document.getElementById('ringBtn').classList.add('disabled');
+                        document.getElementById('ringBtn').textContent = '✅ Oy Kullanıldı';
+                        document.getElementById('alreadyVoted').classList.add('show');
+                    }
+                });
+            }
+
+            function updateUI(count) {
+                document.getElementById('count').textContent = count;
+                const progress = Math.min((count / TARGET_COUNT) * 100, 100);
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('progressText').textContent = '%' + Math.round(progress) + ' tamamlandı';
+                
                 if (count >= TARGET_COUNT) {
-                    count = 0;
-                    localStorage.removeItem('driverNotified');
+                    document.getElementById('completeMessage').classList.add('show');
+                } else {
+                    document.getElementById('completeMessage').classList.remove('show');
                 }
-                return count + 1;
-            }).then((result) => {
-                if (result.committed) {
-                    const newCount = result.snapshot.val();
-                    localStorage.setItem('myLastCall', now.toString());
-                    
-                    document.getElementById('successMessage').classList.add('show');
-                    setTimeout(() => {
-                        document.getElementById('successMessage').classList.remove('show');
-                    }, 3000);
-                    
-                    document.getElementById('ringBtn').classList.remove('active');
-                    document.getElementById('ringBtn').classList.add('disabled');
-                    document.getElementById('ringBtn').textContent = '⏳ Bekleme Süresi';
-                    document.getElementById('cooldownMessage').classList.add('show');
-                    
-                    startCooldownTimer();
-                    
-                    if (newCount >= TARGET_COUNT) {
-                        notifyDriver(newCount);
-                        setTimeout(() => {
-                            countRef.set(0);
-                            localStorage.removeItem('driverNotified');
-                        }, 5000);
-                    }
+            }
+
+            function callRing() {
+                const btn = document.getElementById('ringBtn');
+                if (btn.classList.contains('disabled')) {
+                    alert('❌ Siz zaten ring çağırdınız!\n\nHer kişi sadece 1 kez basabilir.');
+                    return;
                 }
-            });
-        }
 
-        function notifyDriver(count) {
-            const botToken = localStorage.getItem('botToken');
-            const chatId = localStorage.getItem('chatId');
-            const stopName = localStorage.getItem('stopName') || 'MÜHENDİSLİK FAKÜLTESİ';
-            
-            if (!botToken || !chatId) {
-                console.log('Telegram bilgileri eksik');
-                return;
-            }
-            
-            const notified = localStorage.getItem('driverNotified');
-            if (notified) return;
-            
-            const message = `🚌 ACİL DURUM!\n\n${stopName} durağında ${count} kişi ring çağırdı!\n\nLütfen HEMEN durağa gidin! 🔔\n\nSayaç 5 saniye sonra sıfırlanacak...`;
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
-            
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        localStorage.setItem('driverNotified', 'true');
-                        alert('✅ Şoför Telegram\'dan bilgilendirildi!');
+                votersRef.child(myDeviceId).once('value', (snapshot) => {
+                    if (snapshot.exists()) {
+                        alert('❌ Siz zaten ring çağırdınız!');
+                        btn.classList.remove('active');
+                        btn.classList.add('disabled');
+                        btn.textContent = '✅ Oy Kullanıldı';
+                        document.getElementById('alreadyVoted').classList.add('show');
+                        return;
                     }
-                })
-                .catch(err => console.error('Bildirim hatası:', err));
-        }
 
-        function sendTestMessage() {
-            const botToken = document.getElementById('botToken').value;
-            const chatId = document.getElementById('chatId').value;
-            const stopName = document.getElementById('stopNameInput').value;
-            
-            if (!botToken || !chatId) {
-                alert('⚠️ Lütfen Bot Token ve Chat ID girin!');
-                return;
+                    votersRef.child(myDeviceId).set({
+                        timestamp: Date.now(),
+                        voted: true
+                    }).then(() => {
+                        countRef.transaction((currentCount) => {
+                            let count = currentCount || 0;
+                            if (count >= TARGET_COUNT) {
+                                votersRef.remove();
+                                return 1;
+                            }
+                            return count + 1;
+                        }).then((result) => {
+                            if (result.committed) {
+                                const newCount = result.snapshot.val();
+                                
+                                btn.classList.remove('active');
+                                btn.classList.add('disabled');
+                                btn.textContent = '✅ Oy Kullanıldı';
+                                
+                                document.getElementById('successMessage').classList.add('show');
+                                setTimeout(() => {
+                                    document.getElementById('successMessage').classList.remove('show');
+                                }, 3000);
+                                
+                                document.getElementById('alreadyVoted').classList.add('show');
+                                
+                                if (newCount >= TARGET_COUNT) {
+                                    notifyDriver(newCount);
+                                }
+                            }
+                        });
+                    }).catch((error) => {
+                        alert('❌ Hata: ' + error.message);
+                        console.error(error);
+                    });
+                });
             }
-            
-            const message = `🧪 TEST MESAJI\n\n${stopName} - Ring sistemi başarıyla çalışıyor! ✅`;
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
-            
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        alert('✅ Test mesajı gönderildi! Telegram\'ı kontrol edin.');
-                    } else {
-                        alert('⚠️ Hata: ' + data.description);
-                    }
-                })
-                .catch(err => alert('❌ Hata: ' + err.message));
-        }
 
-        function checkCooldown() {
-            const lastCall = localStorage.getItem('myLastCall');
-            if (!lastCall) return;
-            
-            const now = Date.now();
-            const elapsed = now - parseInt(lastCall);
-            
-            if (elapsed < COOLDOWN_MS) {
-                document.getElementById('ringBtn').classList.remove('active');
-                document.getElementById('ringBtn').classList.add('disabled');
-                document.getElementById('ringBtn').textContent = '⏳ Bekleme Süresi';
-                document.getElementById('cooldownMessage').classList.add('show');
-                startCooldownTimer();
-            }
-        }
-
-        function startCooldownTimer() {
-            if (cooldownInterval) clearInterval(cooldownInterval);
-            
-            cooldownInterval = setInterval(() => {
-                const lastCall = localStorage.getItem('myLastCall');
-                if (!lastCall) {
-                    clearInterval(cooldownInterval);
+            function notifyDriver(count) {
+                const botToken = localStorage.getItem('botToken');
+                const chatId = localStorage.getItem('chatId');
+                const stopName = localStorage.getItem('stopName') || 'MÜHENDİSLİK FAKÜLTESİ';
+                
+                if (!botToken || !chatId) {
+                    console.log('Telegram bilgileri eksik');
                     return;
                 }
                 
-                const now = Date.now();
-                const elapsed = now - parseInt(lastCall);
-                const remaining = COOLDOWN_MS - elapsed;
+                const message = `🚌 ACİL!\n\n${stopName} durağında ${count} kişi ring çağırdı!\n\nLÜTFEN HEMEN durağa gidin! 🔔`;
+                const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
                 
-                if (remaining <= 0) {
-                    clearInterval(cooldownInterval);
-                    document.getElementById('ringBtn').classList.remove('disabled');
-                    document.getElementById('ringBtn').classList.add('active');
-                    document.getElementById('ringBtn').textContent = '🔔 RING ÇAĞIR';
-                    document.getElementById('cooldownMessage').classList.remove('show');
-                } else {
-                    const mins = Math.floor(remaining / 60000);
-                    const secs = Math.floor((remaining % 60000) / 1000);
-                    document.getElementById('cooldownTime').textContent = 
-                        mins + ':' + secs.toString().padStart(2, '0');
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.ok) {
+                            alert('✅ Şoför bilgilendirildi!');
+                        }
+                    })
+                    .catch(err => console.error('Bildirim hatası:', err));
+            }
+
+            function sendTestMessage() {
+                const botToken = document.getElementById('botToken').value;
+                const chatId = document.getElementById('chatId').value;
+                const stopName = document.getElementById('stopNameInput').value;
+                
+                if (!botToken || !chatId) {
+                    alert('⚠️ Lütfen Bot Token ve Chat ID girin!');
+                    return;
                 }
-            }, 1000);
-        }
+                
+                const message = `🧪 TEST\n\n${stopName} - Ring sistemi çalışıyor! ✅`;
+                const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+                
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.ok) {
+                            alert('✅ Test mesajı gönderildi!');
+                        } else {
+                            alert('⚠️ Hata: ' + data.description);
+                        }
+                    })
+                    .catch(err => alert('❌ Hata: ' + err.message));
+            }
 
-        function resetSystem() {
-            if (!confirm('⚠️ Sayacı sıfırlamak istediğinize emin misiniz?')) return;
-            
-            countRef.set(0).then(() => {
-                localStorage.removeItem('driverNotified');
-                alert('✅ Sayaç sıfırlandı!');
-            });
-        }
+            function resetSystem() {
+                const password = prompt('⚠️ Yönetici şifresi:');
+                if (password !== 'admin123') {
+                    alert('❌ Yanlış şifre!');
+                    return;
+                }
+                
+                if (!confirm('Tüm oyları ve sayacı sıfırlamak istediğinize emin misiniz?')) return;
+                
+                countRef.set(0);
+                votersRef.remove();
+                
+                localStorage.removeItem('deviceId');
+                myDeviceId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId', myDeviceId);
+                
+                document.getElementById('ringBtn').classList.remove('disabled');
+                document.getElementById('ringBtn').classList.add('active');
+                document.getElementById('ringBtn').textContent = '🔔 RING ÇAĞIR';
+                document.getElementById('alreadyVoted').classList.remove('show');
+                
+                alert('✅ Sistem sıfırlandı!');
+            }
 
-        function loadSettings() {
-            const stopName = localStorage.getItem('stopName') || 'MÜHENDİSLİK FAKÜLTESİ';
-            const botToken = localStorage.getItem('botToken') || '';
-            const chatId = localStorage.getItem('chatId') || '';
-            
-            document.getElementById('stopName').textContent = stopName;
-            document.getElementById('stopNameInput').value = stopName;
-            document.getElementById('botToken').value = botToken;
-            document.getElementById('chatId').value = chatId;
-        }
+            function loadSettings() {
+                const stopName = localStorage.getItem('stopName') || 'MÜHENDİSLİK FAKÜLT
+      
+ 
 
-        function openSettings() {
-            document.getElementById('settingsModal').classList.add('show');
-        }
-
-        function closeSettings() {
-            document.getElementById('settingsModal').classList.remove('show');
-        }
-
-        function saveSettings() {
-            const stopName = document.getElementById('stopNameInput').value;
-            const botToken = document.getElementById('botToken').value;
-            const chatId = document.getElementById('chatId').value;
-            
-            localStorage.setItem('stopName', stopName);
-            localStorage.setItem('botToken', botToken);
-            localStorage.setItem('chatId', chatId);
-            
-            document.getElementById('stopName').textContent = stopName;
-            
-            alert('✅ Ayarlar kaydedildi!');
-            closeSettings();
-        }
-    </script>
-</body>
-</html>
+   
