@@ -363,14 +363,13 @@
     <script>
         // ⚠️⚠️⚠️ ÖNEMLİ: BURAYA FİREBASE BİLGİLERİNİZİ YAPIŞTIRIN ⚠️⚠️⚠️
         const firebaseConfig = {
-            apiKey: "AIzaSyB4GbZstvDVOlq4JhmdObPS66E77y0Eb2w",
-            authDomain: "ring-sistemi-yenii.firebaseapp.com",
-            databaseURL:https://ring-sistemi-yenii-default-rtdb.firebaseio.com",
-            projectId: "ring-sistemi-yenii",
-            storageBucket:  "ring-sistemi-yenii.firebasestorage.app",
-            messagingSenderId: "809715979580",
-            appId:"1:809715979580:web:5a9410f662f2ef51cd7a39"
- 
+            apiKey: "AIzaSyAlWlvGJb9YX0kjJd7r8YuyrXwHXl1JDSg",
+            authDomain:"okul-ring.firebaseapp.com", 
+            databaseURL: "https://okul-ring-default-rtdb.firebaseio.com",
+            projectId:"okul-ring", 
+            storageBucket:"okul-ring.firebasestorage.app",
+            messagingSenderId: "64913343428",
+            appId: "1:64913343428:web:e68e988a9bbe358d399a91"
         };
 
         try {
@@ -557,8 +556,46 @@
             }
 
             function loadSettings() {
-                const stopName = localStorage.getItem('stopName') || 'MÜHENDİSLİK FAKÜLT
-      
- 
+                const stopName = localStorage.getItem('stopName') || 'MÜHENDİSLİK FAKÜLTESİ';
 
-   
+                const botToken = localStorage.getItem('botToken') || '';
+                const chatId = localStorage.getItem('chatId') || '';
+                
+                document.getElementById('stopName').textContent = stopName;
+                document.getElementById('stopNameInput').value = stopName;
+                document.getElementById('botToken').value = botToken;
+                document.getElementById('chatId').value = chatId;
+            }
+
+            function openSettings() {
+                document.getElementById('settingsModal').classList.add('show');
+            }
+
+            function closeSettings() {
+                document.getElementById('settingsModal').classList.remove('show');
+            }
+
+            function saveSettings() {
+                const stopName = document.getElementById('stopNameInput').value;
+                const botToken = document.getElementById('botToken').value;
+                const chatId = document.getElementById('chatId').value;
+                
+                localStorage.setItem('stopName', stopName);
+                localStorage.setItem('botToken', botToken);
+                localStorage.setItem('chatId', chatId);
+                
+                document.getElementById('stopName').textContent = stopName;
+                
+                alert('✅ Ayarlar kaydedildi!');
+                closeSettings();
+            }
+
+        } catch (error) {
+            document.getElementById('statusText').textContent = '🔴 Firebase Başlatma Hatası!';
+            document.getElementById('statusText').className = 'status-offline';
+            console.error('Firebase başlatma hatası:', error);
+            alert('❌ Firebase başlatılamadı!\n\nLütfen Firebase bilgilerini kontrol edin.\n\nHata: ' + error.message);
+        }
+    </script>
+</body>
+</html>
